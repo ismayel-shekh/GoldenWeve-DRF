@@ -8,8 +8,6 @@ class productViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.productSreializer
 
 
-
-
 from django.shortcuts import render
 from rest_framework import viewsets
 from . import models
@@ -22,7 +20,6 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from authuser.models import User
 
-    
 
 class buyproductViewSet(viewsets.ModelViewSet):
     queryset = models.productbuy.objects.all()

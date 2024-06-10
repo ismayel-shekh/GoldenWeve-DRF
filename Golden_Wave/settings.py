@@ -27,13 +27,13 @@ SECRET_KEY = 'django-insecure-2g@ffsyg%1=nvqa8==+o69p40vf@dqr5=l_ivz(%h98d#(q_@!
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-DATABASES = {
-    'default': dj_database_url.config(
-        # Replace this value with your local database's connection string.
-        default='postgres://goldenwave_user:LCzLtThIwvA7dau9t5xPJVs5NkM3J6Jn@dpg-cpj5l1q1hbls73bqjq9g-a.oregon-postgres.render.com/goldenwave',
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         # Replace this value with your local database's connection string.
+#         default='postgres://goldenwave_user:LCzLtThIwvA7dau9t5xPJVs5NkM3J6Jn@dpg-cpj5l1q1hbls73bqjq9g-a.oregon-postgres.render.com/goldenwave',
 
-    )
-}
+#     )
+# }
 
 ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
