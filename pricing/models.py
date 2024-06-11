@@ -20,7 +20,7 @@ class planfeaters(models.Model):
 
 
 class bookingplans(models.Model):
-    User = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     Plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     count = models.IntegerField(default=3)
 

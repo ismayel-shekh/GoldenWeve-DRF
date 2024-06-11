@@ -30,13 +30,22 @@ class plansfeatersviewset(viewsets.ModelViewSet):
     serializer_class = serializers.plansfeatersSerializer
     filter_backends = [filterfeatres]
 
+class filterproductbuy(filters.BaseFilterBackend):
+    def filter_queryset(self, request, query_set, view):
+        user_id = request.query_params.get("user_id")
+        if user_id == 'null':
+            return query_set.none()
+        if user_id:
+            return query_set.filter(user = user_id)
+        return query_set
+
 class bookingplansviewset(viewsets.ModelViewSet):
     queryset = models.bookingplans.objects.all()
     serializer_class = serializers.bookingplansSerializer
-
+    filter_backends = [filterproductbuy]
     def create(self, request, *args, **kwargs):
 
-        customer_id = request.data.get('User')
+        customer_id = request.data.get('user')
         plans = request.data.get('Plan')
         quantiry = int(request.data.get('count'))
         quantiry += 1
@@ -56,7 +65,7 @@ class bookingplansviewset(viewsets.ModelViewSet):
 
                 print("booking")
                 x = models.bookingplans.objects.create(
-                    User = current_user,
+                    user = current_user,
                     Plan = plan,
                     count = quantiry,
                 )

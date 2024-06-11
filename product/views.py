@@ -19,18 +19,26 @@ from . import serializers
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from authuser.models import User
-
+from rest_framework import filters
+class filterproductbuy(filters.BaseFilterBackend):
+    def filter_queryset(self, request, query_set, view):
+        user_id = request.query_params.get("user_id")
+        if user_id == 'null':
+            return query_set.none()
+        if user_id:
+            return query_set.filter(user = user_id)
+        return query_set
 
 class buyproductViewSet(viewsets.ModelViewSet):
     queryset = models.productbuy.objects.all()
     serializer_class = serializers.buyproductSreializer
-
+    filter_backends = [filterproductbuy]
 
     def create(self, request, *args, **kwargs):
 
         # serializer = self.get_serializer(data=request.data)
         # serializer.is_valid(raise_exception=True)
-        customer_id = request.data.get('User')
+        customer_id = request.data.get('user')
         product_id = request.data.get('product')
         quantiry = int(request.data.get('quantiry'))
         current_user = User.objects.get(id=customer_id)
@@ -48,7 +56,7 @@ class buyproductViewSet(viewsets.ModelViewSet):
             current_user.save()
 
             x = models.productbuy.objects.create(
-                    User = current_user,
+                    user = current_user,
                     product = product,
                     quantiry = quantiry,
                 )
