@@ -13,7 +13,7 @@ class Plan(models.Model):
         return self.type
 
 class planfeaters(models.Model):
-    Plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     featers = models.CharField(max_length=260)
     def __str__(self):
         return self.Plan.type

@@ -6,6 +6,7 @@ from rest_framework import viewsets, status
 from rest_framework.response import Response
 from . import models
 from .models import bookingplans
+from rest_framework import filters
 from . import serializers
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -15,10 +16,19 @@ class planesviewset(viewsets.ModelViewSet):
     queryset = models.Plan.objects.all()
     serializer_class = serializers.plansSerializer
 
+class filterfeatres(filters.BaseFilterBackend):
+    def filter_queryset(self, request, query_set, view):
+        plan_id = request.query_params.get("plan_id")
+        if plan_id == 'null':
+            return query_set.none()
+        if plan_id:
+            return query_set.filter(plan = plan_id)
+        return query_set
+
 class plansfeatersviewset(viewsets.ModelViewSet):
     queryset = models.planfeaters.objects.all()
     serializer_class = serializers.plansfeatersSerializer
-
+    filter_backends = [filterfeatres]
 
 class bookingplansviewset(viewsets.ModelViewSet):
     queryset = models.bookingplans.objects.all()
@@ -42,7 +52,7 @@ class bookingplansviewset(viewsets.ModelViewSet):
                 # serializer.save()
                 current_user.balance -= total_cost
                 current_user.save()
-                
+
 
                 print("booking")
                 x = models.bookingplans.objects.create(
