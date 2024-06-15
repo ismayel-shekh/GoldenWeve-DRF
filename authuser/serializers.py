@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import User
 from django.contrib.auth import authenticate
+from rest_framework.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,3 +53,37 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
     password = serializers.CharField(required = True)   
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField(required=True)
+    old_password = serializers.CharField(write_only=True, required=True)
+    password = serializers.CharField(write_only=True, required=True)
+    password2 = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        user_id = attrs.get("user_id")
+        old_password = attrs.get("old_password")
+        password = attrs.get("password")
+        password2 = attrs.get("password2")
+
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            raise ValidationError("User not found")
+
+        if not user.check_password(old_password):
+            raise ValidationError("Old password is not correct")
+
+        if password != password2:
+            raise ValidationError("New password fields didn't match")
+
+        return attrs
+
+    def save(self):
+        user_id = self.validated_data["user_id"]
+        password = self.validated_data["password"]
+
+        user = User.objects.get(id=user_id)
+        user.set_password(password)
+        user.save()
