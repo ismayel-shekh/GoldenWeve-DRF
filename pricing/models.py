@@ -16,7 +16,7 @@ class planfeaters(models.Model):
     plan = models.ForeignKey(Plan, on_delete=models.CASCADE)
     featers = models.CharField(max_length=260)
     def __str__(self):
-        return self.Plan.type
+        return self.plan.type
 
 
 class bookingplans(models.Model):
@@ -25,4 +25,4 @@ class bookingplans(models.Model):
     count = models.IntegerField(default=3)
 
     def __str__(self):
-        return self.Plan.type
+        return self.plan.type
